@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en-us">
+
+<head>
+	<meta charset="utf-8">
+	<title>Reporter - HTML Blog Template</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+	<meta name="description" content="This is meta description">
+	<meta name="author" content="Themefisher">
+  
+	<link rel="shortcut icon" href="{% static "images/favicon.png" %}" type="image/x-icon">
+	<link rel="icon" href="{% static "images/favicon.png" %}" type="image/x-icon">
+  
+  <!-- theme meta -->
+  <meta name="theme-name" content="reporter" />
+
+	<!-- # Google Fonts -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Neuton:wght@700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+	<!-- # CSS Plugins -->
+
+	<link rel="stylesheet" href="{% static "plugins/bootstrap/bootstrap.min.css" %}">
+
+	<!-- # Main Style Sheet -->
+
+	<link rel="stylesheet" href="{% static "css/style.css" %}">
+</head>
+
+<body>
+
+  <header class="navigation">
+    <div class="container">
+      <nav class="navbar navbar-expand-lg navbar-light px-0">
+        <a class="navbar-brand order-1 py-0" href="/">
+          <img loading="prelaod" decoding="async" class="img-fluid" src="{% static 'images/logo.png' %}" alt="Reporter Hugo">
+        </a>
+        <div class="navbar-actions order-3 ml-0 ml-md-4">
+          <button aria-label="navbar toggler" class="navbar-toggler border-0" type="button" data-toggle="collapse"
+            data-target="#navigation"> <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+        <form action="#!" class="search order-lg-3 order-md-2 order-3 ml-auto">
+          <input id="search-query" name="s" type="search" placeholder="Search..." autocomplete="off">
+        </form>
+        <div class="collapse navbar-collapse text-center order-lg-2 order-4" id="navigation">
+          <ul class="navbar-nav mx-auto mt-3 mt-lg-0">
+            <li class="nav-item"> <a class="nav-link" href="/">Home</a>
+            </li>
+            <li class="nav-item dropdown"> 
+              <a class="nav-link dropdown-toggle" href="#" role="button"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Quotes
+              </a>
+              <div class="dropdown-menu">
+                {% for category in categories %}
+                  <a class="dropdown-item" href="{% url 'index_with_category' category.slug %}">{{ category.name }}</a>
+                {% endfor %}
+              </div>
+              <li class="nav-item"> <a class="nav-link" href="/about">About</a>
+              </li>
+            </li>
+            
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+<main>
+  <section class="section">
+    <div class="container">
+      <div class="row no-gutters-lg">
+        <div class="col-12">
+          <h2 class="section-title">Latest Quotes</h2>
+        </div>
+        <div class="col-lg-8 mb-5 mb-lg-0">
+          <div class="row">
+            
+            {% for post in posts %}
+  <div class="col-md-6 mb-4">
+    <article class="card article-card article-card-sm h-100">
+      <a href="{% url 'quotepost' post_id=post.id %}">
+
+        <div class="card-image">
+          {% if post.image %}
+            <img loading="lazy" decoding="async" src="{{ post.image.url }}" alt="{{ post.title }}" class="w-100">
+          {% endif %}
+        </div>
+      </a>
+      <div class="card-body px-0 pb-0">
+        <ul class="post-meta mb-2">
+          <li>
+            {% for category in post.categories.all %}   
+              <a href="{% url 'quotepost' post_id=post.id %}">{{ category.name }}</a>
+              {% if not forloop.last %} {% endif %}
+            {% endfor %}
+          </li>
+        </ul>
+        <h2><a class="post-title" href="{% url 'quotepost' post_id=post.id %}">{{ post.title }}</a></h2>
+        <p class="card-text">{{ post.content }}</p>
+        <div class="content">
+          <a class="read-more-btn" href="{% url 'quotepost' post_id=post.id %}">Read Full Article</a>
+        </div>
+      </div>
+    </article>
+  </div>
+{% endfor %}
+<div class="col-12">
+  <div class="row">
+      <div class="col-12">
+          <nav class="mt-4">
+              <!-- pagination -->
+              <div class="col-12">
+    <div class="row">
+        <div class="col-12">
+            <nav class="mt-4">
+                <!-- pagination -->
+                <nav class="mb-md-50">
+                    <ul class="pagination justify-content-center">
+                        {% if posts.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1" aria-label="First">
+                                    <span aria-hidden="true">&laquo;&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ posts.previous_page_number }}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        {% for i in posts.paginator.page_range %}
+                            {% if i == posts.number %}
+                                <li class="page-item active">
+                                    <span class="page-link">{{ i }}</span>
+                                </li>
+                            {% elif posts.number|add:"-1" <= i <= posts.number|add:"1" %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                </li>
+                            {% elif i == posts.number|add:"-2" or i == posts.number|add:"2" %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">...</span>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if posts.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ posts.next_page_number }}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ posts.paginator.num_pages }}" aria-label="Last">
+                                    <span aria-hidden="true">&raquo;&raquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </nav>
+        </div>
+    </div>
+</div>
+          </nav>
+      </div>
+  </div>
+</div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+  <div class="widget-blocks">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="widget">
+          <div class="widget-body">
+            <a href="/about">
+            <img loading="lazy" decoding="async" src="{% static "images/author.jpg"%}" alt="About Me" class="w-100 author-thumb-sm d-block">
+            <h2 class="widget-title my-3">Hootan Safiyari</h2>
+            <p class="mb-3 pb-2">Hello, I’m Hootan Safiyari. A Content writter, Developer and Story teller. Working as a Content writter at CoolTech Agency. Quam nihil …</p> <a href="/about" class="btn btn-sm btn-outline-primary">Know
+              More</a>
+            <a/>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12 col-md-6">
+        <div class="widget">
+          <h2 class="section-title mb-3">Recommended</h2>
+          <div class="widget-body">
+            <div class="widget-list">
+              {% for post in recommended_posts %}
+                <article class="card mb-4">
+                  <div class="card-image">
+                    <a href="{% url 'quotepost' post_id=post.id %}">
+                      <div class="post-info"></div>
+                      <img loading="lazy" decoding="async" src="{{ post.image.url }}" alt="{{ post.title }}" class="w-100">
+                    </a>
+                  </div>
+                  <div class="card-body px-0 pb-1">
+                    <h3><a class="post-title post-title-sm" href="{% url 'quotepost' post_id=post.id %}">{{ post.title }}</a></h3>
+                    <p class="card-text">{{ post.content }}</p>
+                    <div class="content">
+                      <a class="read-more-btn" href="{% url 'quotepost' post_id=post.id %}">Read Full Article</a>
+                    </div>
+                  </div>
+                </article>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-12 col-md-6">
+        <div class="widget">
+            <h2 class="section-title mb-3">Categories</h2>
+            <div class="widget-body">
+                <ul class="widget-list">
+                    {% for category in categories %}
+                    <li><a href="{% url 'index_with_category' category.slug %}">{{ category.name }}<span class="ml-auto">({{ category.blogpost_set.count }})</span></a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    </div>
+  </div>
+</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="bg-dark mt-5">
+  <div class="container section">
+    <div class="row">
+      <div class="col-lg-10 mx-auto text-center">
+        <a class="d-inline-block mb-4 pb-2" href="index.html">
+          <img loading="prelaod" decoding="async" class="img-fluid" src={% static "images/logo-white.png" %} alt="Reporter Hugo">
+        </a>
+        <ul class="p-0 d-flex navbar-footer mb-0 list-unstyled">
+          <li class="nav-item my-0"> <a class="nav-link" href="/about">About</a></li>
+          <li class="nav-item my-0"> <a class="nav-link" href="#">Privacy Policy</a></li>
+          <li class="nav-item my-0"> <a class="nav-link" href="#">Terms Conditions</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<!-- # JS Plugins -->
+
+<script src="{% static "plugins/jquery/jquery.min.js" %}"></script>
+<script src="{% static "plugins/bootstrap/bootstrap.min.js" %}"></script>
+
+<!-- Main Script -->
+
+<script src="{% static "js/script.js" %}"></script>
+
+</body>
+</html>

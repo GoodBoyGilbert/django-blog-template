@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+{% load static %}
+
+<style>
+  .bigger-image {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    display: block; /* Ensures the image is treated as a block element */
+    margin: 0 auto; /* Centers the image within its container */
+  }
+
+  /* Optional: Add some padding to the article for better spacing */
+  article {
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.0);
+    background-color: #fff;
+  }
+</style>
+
+<html lang="en-us">
+<head>
+	<meta charset="utf-8">
+	<title>Reporter - HTML Blog Template</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+	<meta name="description" content="This is meta description">
+	<meta name="author" content="Themefisher">
+
+	<link rel="shortcut icon" href="{% static "images/favicon.png" %}" type="image/x-icon">
+	<link rel="icon" href="{% static "images/favicon.png" %}" type="image/x-icon">
+
+	<!-- # Google Fonts -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Neuton:wght@700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+	<!-- # CSS Plugins -->
+	<link rel="stylesheet" href="{% static "plugins/bootstrap/bootstrap.min.css" %}">
+
+	<!-- # Main Style Sheet -->
+	<link rel="stylesheet" href="{% static "css/style.css" %}">
+</head>
+
+<body>
+
+  <header class="navigation">
+    <div class="container">
+      <nav class="navbar navbar-expand-lg navbar-light px-0">
+        <a class="navbar-brand order-1 py-0" href="/">
+          <img loading="prelaod" decoding="async" class="img-fluid" src="{% static 'images/logo.png' %}" alt="Reporter Hugo">
+        </a>
+        <div class="navbar-actions order-3 ml-0 ml-md-4">
+          <button aria-label="navbar toggler" class="navbar-toggler border-0" type="button" data-toggle="collapse"
+            data-target="#navigation"> <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+        <form action="#!" class="search order-lg-3 order-md-2 order-3 ml-auto">
+          <input id="search-query" name="s" type="search" placeholder="Search..." autocomplete="off">
+        </form>
+        <div class="collapse navbar-collapse text-center order-lg-2 order-4" id="navigation">
+          <ul class="navbar-nav mx-auto mt-3 mt-lg-0">
+            <li class="nav-item"> <a class="nav-link" href="/">Home</a>
+            </li>
+            <li class="nav-item dropdown"> 
+              <a class="nav-link dropdown-toggle" href="#" role="button"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Quotes
+              </a>
+              <div class="dropdown-menu">
+                {% for category in categories %}
+                  <a class="dropdown-item" href="{% url 'index_with_category' category.slug %}">{{ category.name }}</a>
+                {% endfor %}
+              </div>
+              <li class="nav-item"> <a class="nav-link" href="/about">About</a>
+              </li>
+            </li>
+            
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 mb-5 mb-lg-0">
+            <main>
+              <section class="section">
+                <div class="container">
+                  <div class="row">
+                    <div class="col-lg-12 mb-5 mb-lg-0">
+                      <article>
+                        <img loading="lazy" decoding="async" src="{{ post.image.url }}" alt="{{ post.title }}" class="w-100 bigger-image">
+                        
+                        <h1 class="my-3">About Us</h1>
+                        <p>Here's our about us page</p>
+                        <div class="content text-left">
+                          {{ post.content | safe }}
+                        </div>
+                      </article>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </main>
+        
+				</div>
+        <div class="col-lg-4">
+          <div class="widget-blocks">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="widget">
+                  <div class="widget-body">
+                    <a href="/about">
+                    <img loading="lazy" decoding="async" src="{% static "images/author.jpg"%}" alt="About Me" class="w-100 author-thumb-sm d-block">
+                    <h2 class="widget-title my-3">Hootan Safiyari</h2>
+                    <p class="mb-3 pb-2">Hello, I’m Hootan Safiyari. A Content writter, Developer and Story teller. Working as a Content writter at CoolTech Agency. Quam nihil …</p> <a href="/about" class="btn btn-sm btn-outline-primary">Know
+                      More</a>
+                    <a/>
+                  </div>
+                </div>
+              </div>
+      <div class="col-lg-12 col-md-6">
+        <div class="widget">
+          <h2 class="section-title mb-3">Recommended</h2>
+          <div class="widget-body">
+            <div class="widget-list">
+              {% for post in recommended_posts %}
+                <article class="card mb-4">
+                  <div class="card-image">
+                    <a href="{% url 'quotepost' post_id=post.id %}">
+                      <div class="post-info"></div>
+                      <img loading="lazy" decoding="async" src="{{ post.image.url }}" alt="{{ post.title }}" class="w-100">
+                    </a>
+                  </div>
+                  <div class="card-body px-0 pb-1">
+                    <h3><a class="post-title post-title-sm" href="{% url 'quotepost' post_id=post.id %}">{{ post.title }}</a></h3>
+                    <p class="card-text">{{ post.content }}</p>
+                    <div class="content">
+                      <a class="read-more-btn" href="{% url 'quotepost' post_id=post.id %}">Read Full Article</a>
+                    </div>
+                  </div>
+                </article>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12 col-md-6">
+        <div class="widget">
+          <h2 class="section-title mb-3">Categories</h2>
+          <div class="widget-body">
+            <ul class="widget-list">
+                {% for category in categories %}
+                <li><a href="{% url 'index_with_category' category.slug %}">{{ category.name }}<span class="ml-auto">({{ category.blogpost_set.count }})</span></a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+			</div>
+		</div>
+	</section>
+</main>
+
+<footer class="bg-dark mt-5">
+  <div class="container section">
+    <div class="row">
+      <div class="col-lg-10 mx-auto text-center">
+        <a class="d-inline-block mb-4 pb-2" href="index.html">
+          <img loading="prelaod" decoding="async" class="img-fluid" src={% static "images/logo-white.png" %} alt="Reporter Hugo">
+        </a>
+        <ul class="p-0 d-flex navbar-footer mb-0 list-unstyled">
+          <li class="nav-item my-0"> <a class="nav-link" href="/about">About</a></li>
+          <li class="nav-item my-0"> <a class="nav-link" href="#">Privacy Policy</a></li>
+          <li class="nav-item my-0"> <a class="nav-link" href="#">Terms Conditions</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<!-- # JS Plugins -->
+<script src="{% static "plugins/jquery/jquery.min.js" %}"></script>
+<script src="{% static "plugins/bootstrap/bootstrap.min.js" %}"></script>
+
+<!-- Main Script -->
+
+<script src="{% static "js/script.js" %}"></script>
+
+</body>
+</html>
